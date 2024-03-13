@@ -4,8 +4,8 @@ import java.util.Stack;
 
 public class MathCalc {
     String Equation;
-    List<String> infix;
-    Stack<String> prefix;
+    public List<String> infix;
+    public Stack<String> prefix;
     public MathCalc(String Equation){
         //infix
         infix = new ArrayList<>();
@@ -59,7 +59,7 @@ public class MathCalc {
         return -1;
     }
 
-    private int SolveTwo(int num1, int num2, int op){
+    private Double SolveTwo(Double num1, Double num2, int op){
         switch (op){
             case 0:
                 return num1 - num2;
@@ -70,23 +70,36 @@ public class MathCalc {
             case 3:
                 return num1 * num2;
         }
-        return -9999;
+        return -1.0;
     }
 
-    public int SolveMdas(){
+    public Double SolveMdas(){
         Stack<String> tempPrefix = (Stack<String>) prefix.clone();
-        Stack<Integer> Solution = new Stack<>();
+        Stack<Double> Solution = new Stack<>();
         while(!tempPrefix.empty()){
             String top = tempPrefix.pop();
             int operationNum = GetOps(top);
             if(operationNum != -1){
-                int num2 = Solution.pop();
-                int num1 = Solution.pop();
+                Double num2 = Solution.pop();
+                Double num1 = Solution.pop();
                 Solution.push(SolveTwo(num1,num2,operationNum));
             }else {
-                Solution.push(Integer.valueOf(top));
+                Solution.push(Double.valueOf(top));
             }
         }
         return Solution.peek();
+    }
+
+    public Double SolveSeq(){
+        Double Res = Double.valueOf(infix.get(0));
+        Double num2 = 1.0;
+        int op;
+        for (int i = 1; i < infix.size(); i++) {
+            op = GetOps(infix.get(i));
+            num2 = Double.valueOf(infix.get(++i));
+            Res = Res = SolveTwo(Res,num2,op);
+
+        }
+        return Res;
     }
 }
